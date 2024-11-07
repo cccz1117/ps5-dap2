@@ -50,6 +50,11 @@ warnings.filterwarnings('ignore')
 alt.renderers.enable("png")
 ```
 
+```{python}
+import requests
+from bs4 import BeautifulSoup
+import pandas as pd
+```
 
 ## Step 1: Develop initial scraper and crawler
 
@@ -163,14 +168,15 @@ def scrape_enforcement_actions(month, year):
           print(title)
           link = "https://oig.hhs.gov" + title_tag['href']
           category = action.select_one('li.display-inline-block.usa-tag.text-no-lowercase').text.strip()
-          #agency = scrape_agency(link)
+          agency = scrape_agency(link)
+          print(agency)
 
           actions_data.append({
               'Title': title,
               'Date': action_date.strftime("%Y-%m-%d"),
               'Category': category,
               'Link': link,
-              #'Agency': agency
+              'Agency': agency
               })
         elif action_date < start_date:
           done = True
