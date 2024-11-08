@@ -55,7 +55,6 @@ alt.renderers.enable("png")
 #
 import requests
 from bs4 import BeautifulSoup
-import pandas as pd
 #
 #
 #
@@ -367,22 +366,117 @@ chart3.save('chart3.svg')
 #
 #
 #
-data_criminal_civil.head()
 #
 #
 #
 #
 #
 #
+filepath = "enforcement_actions_2021_1.csv"
+data = pd.read_csv(filepath)
+data.head()
+```
+#
+data_state = data[data["Agency"].str.contains("State of", case=False, na=False)]
+data_state = data_state.reset_index(drop=True)
+data_state.head()
+#
+#
+#
+import geopandas as gpd
+# Load the shapefile
+states_gdf = gpd.read_file("cb_2018_us_state_500k/cb_2018_us_state_500k.shp")  # Replace with the actual path to your shapefile
+states_gdf.head()
+#
+#
+#
+state_count = (
+    data_state
+    .groupby('Agency')
+    .size()
+    .reset_index(name='Count')
+)
+state_count.head()
+
+```
+#
+state_count["Agency_Name"] = state_count['Agency'].str.replace(r'^State of ', '', regex=True)
+#
+#
+#
+# Ensure state names/abbreviations match in both DataFrames
+merged_gdf = states_gdf.merge(state_count, left_on='NAME', right_on='Agency_Name', how='right')
+
+merged_gdf.head()
+#
+#
+#
+#
+import matplotlib.pyplot as plt
+
+# Plotting the map
+fig, ax = plt.subplots(1, 1, figsize=(15, 10))
+merged_gdf.plot(column='Count', cmap='Blues', linewidth=0.8, edgecolor='0.8', legend=True, ax=ax)
+ax.set_title("Number of Enforcement Actions by State", fontsize=15)
+ax.set_axis_off()
+plt.show()
+
 #
 #
 #
 #
 #
+filepath = "enforcement_actions_2021_1.csv"
+data = pd.read_csv(filepath)
+filepath = "US_Attorney_Districts_Shapefile_simplified_20241108.csv"
+district = pd.read_csv(filepath)
 #
 #
 #
+data_district = data[data["Agency"].str.contains("District", case=False, na=False)]
+data_district = data_district.reset_index(drop=True)
+
+district_count = (
+    data_district
+    .groupby('Agency')
+    .size()
+    .reset_index(name='Count')
+)
 #
+#
+#
+print(district_count.iloc[106])
+```
+#
+def extract_district(agency):
+    if 'Attorney’s Office, ' in agency:  # Case with 'Attorney’s Office, '
+        return agency.split("Attorney’s Office, ")[-1]
+    elif 'Attorney\'s Office, ' in agency:  # Case with 'Attorney\'s Office, '
+        return agency.split("Attorney's Office, ")[-1]
+    elif 'U.S. Attorney’s Office;' in agency:  # Case with 'U.S. Attorney’s Office;'
+        return agency.split("U.S. Attorney’s Office;")[-1]
+    elif 'U.S. Attorney’s Office' in agency:  # Case with 'U.S. Attorney’s Office;'
+        return agency.split("U.S. Attorney’s Office")[-1]
+    elif "U.S. Attorney General," in agency:
+        return agency.split("U.S. Attorney General,")[-1]
+    elif "U.S. Attorneyĺs Office," in agency:
+        return agency.split("U.S. Attorneyĺs Office,")[-1]
+    else:  # For cases without the expected prefixes
+        return agency
+
+# Apply the function to the 'Agency' column
+district_count['Agency_Name'] = district_count['Agency'].apply(extract_district)
+
+district_count.head()
+#
+#
+#
+district.rename(columns={'Judicial District': 'Judicial_District'}, inplace=True)
+
+# Ensure state names/abbreviations match in both DataFrames
+merged = district.merge(district_count, left_on='Judicial_District', right_on='Agency_Name', how='right')
+
+merged_gdf.head()
 #
 #
 #
