@@ -197,26 +197,27 @@ def scrape_enforcement_actions(month, year):
   df.to_csv(file_name, index=False)
   print(f"Data saved to {file_name}")
 
+
+```
+
+```{python}
+from bs4.element import Tag
 def scrape_agency(link):
   detail_response = requests.get(link)
   detail_soup = BeautifulSoup(detail_response.text, 'html.parser')
   agency_tag = detail_soup.select('ul.usa-list.usa-list--unstyled.margin-y-2 li')
-  second_li = agency_tag[1] 
-  if second_li:
+  second_li = agency_tag[1]
+  if not isinstance(second_li.contents[1], Tag):
     agency = second_li.contents[1].strip()
   else:
     agency = 'NaN'
   return agency
 ```
 
-```{python}
-scrape_enforcement_actions(1, 2021)
-```
-
 * c. Test Partner's Code (PARTNER 1)
 
 ```{python}
-scrape_agency('https://oig.hhs.gov/fraud/enforcement/coliseum-medical-center-agreed-to-pay-100000-for-allegedly-violating-patient-dumping-statute-by-failing-to-provide-appropriate-medical-screening-examination/')
+#scrape_enforcement_actions(1, 2021)
 ```
 
 ## Step 3: Plot data based on scraped data
