@@ -129,7 +129,13 @@ print(df.head())
 ### 1. Turning the scraper into a function 
 
 * a. Pseudo-Code (PARTNER 2)
+First, check date input.
 
+Then, create a loop to read in the current url.
+
+Create a for loop to loop in the current page, checking the date of each entry every time, stop when reached date limit.
+
+Proceed to the next page if not reached start date.
 
 * b. Create Dynamic Scraper (PARTNER 2)
 
@@ -195,19 +201,22 @@ def scrape_agency(link):
   detail_response = requests.get(link)
   detail_soup = BeautifulSoup(detail_response.text, 'html.parser')
   agency_tag = detail_soup.select('ul.usa-list.usa-list--unstyled.margin-y-2 li')
-  second_li = agency_tag[1]
-
-  agency = second_li.contents[1].strip()
+  second_li = agency_tag[1] 
+  if second_li:
+    agency = second_li.contents[1].strip()
+  else:
+    agency = 'NaN'
   return agency
 ```
 
 ```{python}
-scrape_enforcement_actions(10, 2024)
+scrape_enforcement_actions(1, 2021)
 ```
 
 * c. Test Partner's Code (PARTNER 1)
 
 ```{python}
+scrape_agency('https://oig.hhs.gov/fraud/enforcement/coliseum-medical-center-agreed-to-pay-100000-for-allegedly-violating-patient-dumping-statute-by-failing-to-provide-appropriate-medical-screening-examination/')
 ```
 
 ## Step 3: Plot data based on scraped data
