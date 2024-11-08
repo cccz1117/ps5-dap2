@@ -1,46 +1,48 @@
----
-title: "title"
-author: "author"
-date: "date"
-format: 
-  pdf:
-    include-in-header: 
-       text: |
-         \usepackage{fvextra}
-         \DefineVerbatimEnvironment{Highlighting}{Verbatim}{breaklines,commandchars=\\\{\}}
-include-before-body:
-  text: |
-    \RecustomVerbatimEnvironment{verbatim}{Verbatim}{
-      showspaces = false,
-      showtabs = false,
-      breaksymbolleft={},
-      breaklines
-    }
-output:
-  echo: false
-  eval: false
----
-
-**Due 11/9 at 5:00PM Central. Worth 100 points + 10 points extra credit.**
-
-## Submission Steps (10 pts)
-1. This problem set is a paired problem set.
-2. Play paper, scissors, rock to determine who goes first. Call that person *Partner 1*.
-    - Partner 1 (name and cnet ID):
-    - Partner 2 (name and cnet ID):
-3. Partner 1 will accept the `ps5` and then share the link it creates with their partner. You can only share it with one partner so you will not be able to change it after your partner has accepted. 
-4. "This submission is our work alone and complies with the 30538 integrity policy." Add your initials to indicate your agreement: \*\*\_\_\*\* \*\*\_\_\*\*
-5. "I have uploaded the names of anyone else other than my partner and I worked with on the problem set **[here](https://docs.google.com/forms/d/185usrCREQaUbvAXpWhChkjghdGgmAZXA3lPWpXLLsts/edit)**"  (1 point)
-6. Late coins used this pset: \*\*\_\_\*\* Late coins left after submission: \*\*\_\_\*\*
-7. Knit your `ps5.qmd` to an PDF file to make `ps5.pdf`, 
-    * The PDF should not be more than 25 pages. Use `head()` and re-size figures when appropriate. 
-8. (Partner 1): push  `ps5.qmd` and `ps5.pdf` to your github repo.
-9. (Partner 1): submit `ps5.pdf` via Gradescope. Add your partner on Gradescope.
-10. (Partner 1): tag your submission in Gradescope
-
-\newpage
-
-```{python}
+# type: ignore
+# flake8: noqa
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
 import pandas as pd
 import altair as alt
 import time
@@ -48,19 +50,19 @@ import time
 import warnings
 warnings.filterwarnings('ignore')
 alt.renderers.enable("png")
-```
-
-```{python}
+#
+#
+#
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
-```
-
-## Step 1: Develop initial scraper and crawler
-
-### 1. Scraping (PARTNER 1)
-
-```{python}
+#
+#
+#
+#
+#
+#
+#
 # Step 1: Fetch the webpage
 url = "https://oig.hhs.gov/fraud/enforcement/"
 response = requests.get(url)
@@ -86,7 +88,7 @@ for action in soup.select('header.usa-card__header'):
     dates.append(date)
 
 ```
-```{python}
+#
 df = pd.DataFrame({
     'Title': titles,
     'Date': dates,
@@ -95,7 +97,7 @@ df = pd.DataFrame({
 })
 print(df.head())
 ```
-```{python}
+#
 agencies = []
 for link in df['Link']:
     detail_response = requests.get(link)
@@ -109,34 +111,34 @@ for link in df['Link']:
 # df['Agency'] = agencies
 print(agencies)
 ```
-```{python}
+#
 df['Agency'] = agencies
 print(df.head())
-```
-
-  
-### 2. Crawling (PARTNER 1)
-
-```{python}
 #
-```
-
-## Step 2: Making the scraper dynamic
-
-### 1. Turning the scraper into a function 
-
-* a. Pseudo-Code (PARTNER 2)
-First, check date input.
-
-Then, create a loop to read in the current url.
-
-Create a for loop to loop in the current page, checking the date of each entry every time, stop when reached date limit.
-
-Proceed to the next page if not reached start date.
-
-* b. Create Dynamic Scraper (PARTNER 2)
-
-```{python}
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
 from datetime import datetime
 import time
 
@@ -197,9 +199,9 @@ def scrape_enforcement_actions(month, year):
     print(f"Data saved to {file_name}")
 
 
-```
-
-```{python}
+#
+#
+#
 from bs4.element import Tag
 
 def scrape_agency(link):
@@ -213,30 +215,30 @@ def scrape_agency(link):
     else:
         agency = 'NaN'
     return agency
-```
-
-* c. Test Partner's Code (PARTNER 1)
-
-```{python}
+#
+#
+#
+#
+#
 #scrape_enforcement_actions(1, 2021)
-```
-
-## Step 3: Plot data based on scraped data
-
-### 1. Plot the number of enforcement actions over time (PARTNER 2)
-
-```{python}
+#
+#
+#
+#
+#
+#
+#
 filepath = "enforcement_actions_2021_1.csv"
 data = pd.read_csv(filepath)
 data.head()
-```
-
-```{python}
+#
+#
+#
 import altair as alt
 from altair_saver import save
-```
-
-```{python}
+#
+#
+#
 # Change "Date" into datetime format
 data['Date'] = pd.to_datetime(data['Date'])
 
@@ -257,15 +259,15 @@ chart1 = alt.Chart(monthly_actions).mark_line().encode(
 )
 chart1.save('chart1.svg')
 
-```
-
-![Number of Enforcement Actions Over Time](chart1.svg)
-
-### 2. Plot the number of enforcement actions categorized: (PARTNER 1)
-
-* based on "Criminal and Civil Actions" vs. "State Enforcement Agencies"
-
-```{python}
+#
+#
+#
+#
+#
+#
+#
+#
+#
 # Change "Date" into datetime format
 data['Date'] = pd.to_datetime(data['Date'])
 
@@ -297,13 +299,13 @@ chart2 = alt.Chart(monthly_actions).mark_line().encode(
 
 chart2.save('chart2.svg')
 
-```
-
-![Number of Enforcement Actions Over Time by Category](chart2.svg)
-
-* based on five topics
-
-```{python}
+#
+#
+#
+#
+#
+#
+#
 # Change "Date" into datetime format
 data['Date'] = pd.to_datetime(data['Date'])
 
@@ -331,9 +333,9 @@ data_criminal_civil['Topic'] = data_criminal_civil['Title'].apply(
     categorize_title)
 
 data_criminal_civil.head()
-```
-
-```{python}
+#
+#
+#
 # Aggregate by month and year, and by topic
 monthly_actions = (
     data_criminal_civil
@@ -360,40 +362,44 @@ chart3 = alt.Chart(monthly_actions).mark_line().encode(
 #chart3
 
 chart3.save('chart3.svg')
-```
-
-![Number of Criminal and Civil Actions Over Time by Topic](chart3.svg)
-
-
-
-## Step 4: Create maps of enforcement activity
-
-### 1. Map by State (PARTNER 1)
-
-```{python}
 #
-```
-
-
-### 2. Map by District (PARTNER 2)
-
-```{python}
 #
-```
-
-## Extra Credit
-
-### 1. Merge zip code shapefile with population
-```{python}
 #
-```
-
-### 2. Conduct spatial join
-```{python}
-
-```
-
-### 3. Map the action ratio in each district
-```{python}
 #
-```
+#
+data_criminal_civil.head()
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+
+#
+#
+#
+#
+#
+#
+#
+#
